@@ -1,4 +1,4 @@
-module github.com/dineshsonachalam/CSV-and-Excel-data-to-JSON
+module github.com/CSV-and-Excel-data-to-JSON
 
 go 1.14
 

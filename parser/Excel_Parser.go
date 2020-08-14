@@ -3,6 +3,7 @@ package parser
 import (
 	"container/list"
 	"fmt"
+	"strings"
 
 	"github.com/extrame/xls"
 	"github.com/tealeg/xlsx"
@@ -31,7 +32,8 @@ func ReadXlsxFile(filePath string) []map[string]interface{} {
 					header_name.PushBack(text)
 				} else {
 					text := cell.String()
-					singleMap[header_iterator.Value.(string)] = text
+					singleMap[strings.ToLower(header_iterator.Value.(string))] = text
+
 					header_iterator = header_iterator.Next()
 				}
 			}

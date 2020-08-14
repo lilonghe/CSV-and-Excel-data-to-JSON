@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 
 	"github.com/gorilla/mux"
-	"github.com/dineshsonachalam/CSV-and-Excel-data-to-JSON/parser"
+	"github.com/CSV-and-Excel-data-to-JSON/parser"
 )
 
 func UploadData(w http.ResponseWriter, req *http.Request) {
@@ -45,7 +45,8 @@ func UploadData(w http.ResponseWriter, req *http.Request) {
 			var extension = filepath.Ext(blobPath)
 			parsedData := ExcelCsvParser(blobPath, extension)
 			parsedJson, _ := json.Marshal(parsedData)
-			fmt.Println(string(parsedJson))
+
+			writeJSON(handler.Filename+".json", parsedData)
 			err = os.Remove(blobPath)
 			if err != nil {
 				fmt.Println(err.Error())
@@ -61,6 +62,28 @@ func UploadData(w http.ResponseWriter, req *http.Request) {
 		t.Execute(w, nil)
 
 	}
+}
+
+func writeJSON(name string, data interface{}) {
+	// 创建文件
+	filePtr, err := os.Create("./data/" + name)
+	if err != nil {
+		fmt.Println("Create file failed", err.Error())
+		return
+	}
+	defer filePtr.Close()
+
+	// 创建Json编码器
+	encoder := json.NewEncoder(filePtr)
+
+	err = encoder.Encode(data)
+	if err != nil {
+		fmt.Println("Encoder failed", err.Error())
+
+	} else {
+		fmt.Println("Encoder success")
+	}
+
 }
 
 func ExcelCsvParser(blobPath string, blobExtension string) (parsedData []map[string]interface{}) {
